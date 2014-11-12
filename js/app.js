@@ -5,14 +5,8 @@
 
 "use strict";
 
-//this is the base URL for all task objects managed by your application
-//requesting this with a GET will get all tasks objects
-//sending a POST to this will insert a new task object
-//sending a PUT to this URL + '/' + task.objectId will update an existing task
-//sending a DELETE to this URL + '/' + task.objectId will delete an existing task
-var tasksUrl = 'https://api.parse.com/1/classes/tasks';
 
-angular.module('ToDoApp', [])
+angular.module('ToDoApp', ['ui.bootstrap'])
     .config(function ($httpProvider) {
         //Parse required two extra headers sent with every HTTP request: X-Parse-Application-Id, X-Parse-REST-API-Key
         //the first needs to be set to your application's ID value
@@ -24,13 +18,24 @@ angular.module('ToDoApp', [])
         $httpProvider.defaults.headers.common['X-Parse-REST-API-Key'] = '8zVEzqjsbB2ZSqZqS7FSLKbgPruXKd0ZgtM3vdGR';
     })
     .controller('TasksController', function ($scope, $http) {
+
+        //this is the base URL for all task objects managed by your application
+        //requesting this with a GET will get all tasks objects
+        //sending a POST to this will insert a new task object
+        //sending a PUT to this URL + '/' + task.objectId will update an existing task
+        //sending a DELETE to this URL + '/' + task.objectId will delete an existing task
+        var tasksUrl = 'https://api.parse.com/1/classes/tasks';
+
         $scope.refreshTasks = function () {
             $scope.loading = true;
-            $http.get(tasksUrl + '?where={"done":false}').success(function (data) {
+            $http.get(tasksUrl + '?where={"done":false}')
+                .success(function (data) {
                 $scope.tasks = data.results;
-            }).error(function (err) {
+            })
+                .error(function (err) {
                 $scope.errorMessage = err;
-            }).finally(function () {
+            })
+                .finally(function () {
                 $scope.loading = false;
             });
         };
